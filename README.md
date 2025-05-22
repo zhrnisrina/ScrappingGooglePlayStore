@@ -20,7 +20,7 @@ Pemilihan kata kunci ini bertujuan untuk memperoleh **data yang representatif da
 
 ## 🎯 Tujuan Proyek
 
-Data yang dikumpulkan digunakan untuk:
+Tujuan utama proyek ini adalah untuk mengumpulkan data aplikasi Google Play secara otomatis dan sistematis, termasuk informasi penting seperti nama aplikasi, developer, kategori, rating, jumlah unduhan, harga, dan deskripsi. Data ini nantinya digunakan untuk:
 
 * Menganalisis distribusi aplikasi berdasarkan kategori dan developer.
 * Menilai kualitas dan popularitas aplikasi berdasarkan rating dan jumlah unduhan.
@@ -42,14 +42,6 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 3. **Pembersihan data** dari nilai kosong dan standarisasi format data.
 4. **Penyimpanan ke database MongoDB**.
 
-## 👥 Target Audiens
-
-Proyek ini dirancang untuk memberikan manfaat bagi:
-
-* **Developer & Product Manager**: Memahami posisi dan performa aplikasi mereka di pasar.
-* **Investor & Analis Pasar**: Menilai tren aplikasi dan potensi risiko pasar.
-* **Akademisi & Peneliti**: Melakukan studi kuantitatif tentang ekosistem aplikasi mobile.
-* **Tim Pemasaran & Strategi Bisnis**: Mendapat insight perilaku pengguna dan kategori aplikasi populer.
 
 ## 📊 Insight Menarik dari Proyek
 
@@ -61,17 +53,20 @@ Proyek ini dirancang untuk memberikan manfaat bagi:
 
 ## 📂 Struktur Data yang Dikumpulkan
 
-| Kolom         | Deskripsi                      |
-| ------------- | ------------------------------ |
-| `app_name`    | Nama aplikasi                  |
-| `developer`   | Nama pengembang aplikasi       |
-| `category`    | Kategori aplikasi              |
-| `rating`      | Nilai rating (1-5)             |
-| `installs`    | Jumlah unduhan                 |
-| `price`       | Harga aplikasi (jika berbayar) |
-| `description` | Deskripsi aplikasi             |
-| `size`        | Ukuran file aplikasi           |
-| `reviews`     | Jumlah ulasan pengguna         |
+| Field                 | Tipe Data     | Deskripsi                                                                   |
+| --------------------- | ------------- | --------------------------------------------------------------------------- |
+| `_id`                 | `ObjectId`    | ID unik dokumen (otomatis oleh MongoDB)                                     |
+| `app_name`            | `string`      | Nama aplikasi                                                               |
+| `developer`           | `string`      | Nama pengembang aplikasi                                                    |
+| `category`            | `string`      | Kategori aplikasi                                                           |
+| `rating`              | `float`       | Nilai rating aplikasi (misalnya 3.77)                                       |
+| `number_of_reviews`   | `integer`     | Jumlah ulasan dari pengguna                                                 |
+| `number_of_downloads` | `string`      | Jumlah unduhan aplikasi (perlu parsing lebih lanjut bila ingin kuantitatif) |
+| `price`               | `float`       | Harga aplikasi (0 berarti gratis)                                           |
+| `size`                | `string/null` | Ukuran file aplikasi (jika tersedia, contoh: "25M")                         |
+| `description`         | `string`      | Deskripsi aplikasi (bisa mengandung HTML tag)                               |
+| `app_id`              | `string`      | ID unik aplikasi di Play Store (misalnya: "com.tinder")                     |
+| `source_keyword`      | `string`      | Kata kunci yang digunakan saat scraping aplikasi ini                        |
 
 ## 🧰 Tools & Teknologi
 
