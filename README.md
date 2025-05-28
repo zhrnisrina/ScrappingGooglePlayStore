@@ -75,19 +75,32 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 
 **1. Top 10 Categories berdasarkan jumlah aplikasi**
 
-![image](https://github.com/user-attachments/assets/ffa426b5-0262-4481-b1a5-0b95ecb854f5)
+<div align="center">
+  
+  ![image](https://github.com/user-attachments/assets/ffa426b5-0262-4481-b1a5-0b95ecb854f5)
+  
+</div>
+
 
   Gambar tersebut menampilkan diagram batang horizontal yang menunjukkan **10 kategori aplikasi teratas di Google Play Store berdasarkan jumlah aplikasi yang berhasil dikumpulkan melalui proses scraping**. Kategori **"Sports"** mendominasi dengan jumlah aplikasi terbanyak, disusul oleh kategori **"Strategy"** dan **"Entertainment"**. Kategori lain yang juga menempati peringkat atas adalah **Shopping**, **Simulation**, **Finance**, hingga **Parenting**. Hal ini mengindikasikan bahwa kategori-kategori tersebut memiliki tingkat popularitas atau tingkat pengembangan aplikasi yang tinggi, dan bisa menjadi area fokus utama dalam analisis lebih lanjut atau pengembangan aplikasi baru.
 
 **2. Rata-rata Download vs Rating per Kategori**
 
-![image](https://github.com/user-attachments/assets/06d18d94-79a8-4170-b403-16410a967b4e)
+<div align="center">
+  
+  ![image](https://github.com/user-attachments/assets/06d18d94-79a8-4170-b403-16410a967b4e)
+  
+</div>
 
   Gambar tersebut merupakan diagram **scatter plot** yang menunjukkan hubungan antara **rata-rata jumlah download (dalam juta)** dengan **rata-rata rating** untuk setiap kategori aplikasi di Google Play Store. Setiap titik mewakili satu kategori. Terlihat bahwa kategori seperti **Communication** dan **Tools** memiliki jumlah download rata-rata yang sangat tinggi (mencapai lebih dari 1000 juta), namun ratingnya berada pada kisaran rata-rata (sekitar 4.0–4.2). Sebaliknya, beberapa kategori seperti **Casino**, **Medical**, dan **Arcade** memiliki rating tinggi mendekati 4.5 meskipun jumlah downloadnya relatif rendah. Kategori **Auto & Vehicles** tampak menyimpang dengan rating yang sangat rendah. Secara umum, grafik ini menunjukkan bahwa **tingginya jumlah download tidak selalu berkorelasi dengan rating tinggi**, yang bisa menjadi pertimbangan penting bagi pengembang dalam memilih kategori dan fokus pengembangan aplikasi.
 
 **3. Developer dengan Total Download Terbesar (Top 10)**
 
-![image](https://github.com/user-attachments/assets/d17a3346-8e1f-4732-bb8d-5688604ed022)
+<div align="center">
+  
+  ![image](https://github.com/user-attachments/assets/d17a3346-8e1f-4732-bb8d-5688604ed022)
+  
+</div>
 
   Gambar tersebut menunjukkan **diagram batang horizontal** yang mengilustrasikan **10 developer teratas berdasarkan total jumlah download aplikasi di Google Play Store**. Terlihat bahwa **Google LLC** mendominasi secara signifikan dengan total download mendekati **150.000 juta (150 miliar)**, jauh melampaui developer lain. Posisi berikutnya ditempati oleh **Meta Platforms, Inc.**, **WhatsApp LLC**, dan **Microsoft Corporation**, yang masing-masing juga mencatatkan angka download yang tinggi, namun masih sangat kecil dibandingkan Google. Developer lain seperti **Instagram**, **Samsung Electronics**, **Outfit7 Limited**, dan **Garena International** memiliki kontribusi download yang relatif lebih rendah. Visualisasi ini menegaskan bahwa beberapa perusahaan besar menguasai distribusi aplikasi dengan volume unduhan sangat tinggi, mencerminkan dominasi mereka dalam pasar aplikasi global.
 
@@ -114,7 +127,11 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 
 **5. Korelasi Rating dan Download**
 
-![image](https://github.com/user-attachments/assets/07c0ab57-1409-4f5f-bcf9-f1582428896e)
+<div align="center">
+  
+  ![image](https://github.com/user-attachments/assets/07c0ab57-1409-4f5f-bcf9-f1582428896e)
+  
+</div>
 
 Gambar tersebut menampilkan **analisis korelasi antara rating dan jumlah download aplikasi** di Google Play Store. Nilai korelasi Pearson (r) adalah **0**, yang berarti **tidak ada hubungan linear yang signifikan antara jumlah download dan rating aplikasi**. Hal ini divisualisasikan dalam scatter plot dengan sumbu X sebagai jumlah download (dalam skala logaritmik) dan sumbu Y sebagai rating aplikasi.
 Meskipun garis tren (regresi linier) sedikit menanjak, persebaran data sangat tersebar dan tidak menunjukkan pola korelasi yang kuat. Ini mengindikasikan bahwa **aplikasi yang banyak diunduh belum tentu memiliki rating tinggi**, dan sebaliknya, rating tinggi tidak menjamin popularitas dalam bentuk jumlah download. Temuan ini penting untuk pengembang dan analis produk karena menegaskan bahwa **kuantitas pengguna dan kualitas pengalaman pengguna bisa berjalan secara independen**.
@@ -163,7 +180,11 @@ Meskipun garis tren (regresi linier) sedikit menanjak, persebaran data sangat te
 
 **8. Volatilitas Rating antar Aplikasi dalam Satu Kategori**
 
-![image](https://github.com/user-attachments/assets/4e6b0eb8-d5e4-4559-a934-8122d40405f5)
+<div align="center">
+  
+  ![image](https://github.com/user-attachments/assets/4e6b0eb8-d5e4-4559-a934-8122d40405f5)
+  
+</div>
 
  Grafik ini menampilkan volatilitas rating antar aplikasi dalam masing-masing kategori, yang diukur menggunakan standar deviasi (SD) rating. Kategori *Libraries & Demo* menunjukkan volatilitas tertinggi, dengan nilai SD rating melebihi 2, yang mengindikasikan adanya variasi besar dalam penilaian pengguna terhadap aplikasi-aplikasi dalam kategori tersebut. Sebaliknya, kategori seperti *Food & Drink*, *Art & Design*, dan *Education* memiliki standar deviasi rendah, menunjukkan bahwa aplikasi dalam kategori ini cenderung memiliki konsistensi dalam penilaian pengguna. Informasi ini penting untuk menilai stabilitas persepsi kualitas aplikasi dalam setiap kategori — semakin tinggi volatilitas, semakin beragam pula pengalaman pengguna.
   
