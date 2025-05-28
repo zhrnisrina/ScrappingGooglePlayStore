@@ -190,19 +190,31 @@ Meskipun garis tren (regresi linier) sedikit menanjak, persebaran data sangat te
   
 **9. Konsentrasi Developer Dominan per Kategori**
 
-![image](https://github.com/user-attachments/assets/ce253d1c-5255-4083-bf75-f9bd324b01f9)
+<div align="center">
+  
+  ![image](https://github.com/user-attachments/assets/ce253d1c-5255-4083-bf75-f9bd324b01f9)
+  
+</div>
 
   Grafik ini menggambarkan konsentrasi developer dominan di tiap kategori aplikasi, yaitu developer yang memiliki jumlah aplikasi terbanyak dalam satu kategori. Terlihat bahwa pada kategori *Education*, terdapat satu developer yang sangat dominan dengan lebih dari 30 aplikasi, jauh melampaui kategori lain. Hal serupa meskipun dalam skala lebih kecil juga terlihat pada kategori *Entertainment*, *Books & Reference*, dan *Libraries & Demo*. Pola ini menunjukkan bahwa dalam beberapa kategori, distribusi aplikasi cenderung terpusat pada satu developer saja, yang dapat mengindikasikan dominasi pasar atau spesialisasi developer dalam topik tertentu. Sebaliknya, kategori lain memiliki konsentrasi yang lebih merata atau rendah, mengindikasikan persaingan yang lebih seimbang antar developer.
 
 **10. Rasio Aplikasi Berbayar per Kategori**
 
-![image](https://github.com/user-attachments/assets/724a5d8d-15bd-4a70-8ff0-530fcef40a95)
+<div align="center">
+  
+  ![image](https://github.com/user-attachments/assets/724a5d8d-15bd-4a70-8ff0-530fcef40a95)
+  
+</div>
 
   Visualisasi ini menunjukkan proporsi aplikasi berbayar di setiap kategori aplikasi. Kategori *Role Playing* menempati posisi teratas dengan rasio aplikasi berbayar tertinggi, diikuti oleh *Strategy* dan *Personalization*. Artinya, lebih dari separuh aplikasi dalam kategori *Role Playing* adalah aplikasi berbayar. Sebaliknya, banyak kategori seperti *Education*, *Communication*, dan *Books & Reference* memiliki proporsi aplikasi berbayar yang sangat rendah, menunjukkan bahwa mayoritas aplikasi dalam kategori tersebut tersedia secara gratis. Pola ini mengindikasikan perbedaan strategi monetisasi berdasarkan jenis aplikasi, di mana genre permainan dan personalisasi cenderung lebih banyak menawarkan konten berbayar.
 
 **11. Aplikasi Rating Tinggi tapi Download Rendah (Hidden Gems)**
 
-![image](https://github.com/user-attachments/assets/6f6d0732-29e7-49d0-85c7-c9dfb9118f35)
+<div align="center">
+  
+  ![image](https://github.com/user-attachments/assets/6f6d0732-29e7-49d0-85c7-c9dfb9118f35)
+  
+</div>
 
 Visualisasi ini menampilkan sepuluh aplikasi dengan rating tinggi (≥ 4.5) namun jumlah unduhan rendah (< 100.000), yang dikategorikan sebagai *"hidden gems"*. Aplikasi seperti *TC Connect*, *Bonelli Digital Classic*, dan *Good Inside: Parenting* menduduki peringkat teratas dengan rating mendekati sempurna, menunjukkan kualitas yang sangat baik dari perspektif pengguna. Namun, rendahnya angka unduhan mengindikasikan bahwa aplikasi-aplikasi ini kurang dikenal atau belum menjangkau audiens yang luas. Temuan ini menunjukkan adanya potensi besar untuk dikembangkan lebih lanjut melalui promosi atau strategi distribusi yang lebih baik.
 
