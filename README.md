@@ -24,6 +24,7 @@ Proyek ini bertujuan untuk mengumpulkan data aplikasi dari **Google Play Store**
 | `source_keyword`      | `string`      | Kata kunci yang digunakan saat scraping aplikasi ini                        |
 
 </div>
+
 ## 🧰 Tools & Teknologi
 
 * **Python**: Scraping data
@@ -92,6 +93,7 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 
 **4. Aplikasi dengan Download Tinggi tapi Rating Rendah (Risiko UX)**
 
+<div align="center">
 
 | No | Nama Aplikasi                        | Rating   | Jumlah Unduhan |
 |----|--------------------------------------|----------|----------------|
@@ -106,6 +108,8 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 | 9  | Genshin Impact                       | 3.27     | 100,000,000    |
 | 10 | Top War: Battle Game                 | 3.22     | 50,000,000     |
 
+</div>
+
   Tabel tersebut menunjukkan bahwa beberapa aplikasi dengan jumlah unduhan sangat tinggi justru memiliki rating pengguna yang rendah, yang mengindikasikan potensi masalah dalam pengalaman pengguna (UX). Contohnya, **Google Maps** meskipun sangat populer, hanya meraih rating 3,30, kemungkinan karena perubahan fitur atau bug yang mengganggu. **Google Classroom** bahkan memiliki rating lebih rendah lagi (2,54), yang mungkin disebabkan oleh antarmuka yang kurang intuitif atau performa buruk selama penggunaan daring massal. Aplikasi lain seperti **Shelf**, **Genshin Impact**, dan **Top War: Battle Game** juga menunjukkan pola serupa, di mana popularitas tidak menjamin kepuasan pengguna—bisa jadi karena desain UI yang buruk, sistem monetisasi agresif, iklan yang mengganggu, atau ekspektasi pengguna yang tidak terpenuhi. Hal ini menjadi peringatan penting bagi pengembang untuk lebih fokus pada kualitas UX, bukan hanya target unduhan.
 
 **5. Korelasi Rating dan Download**
@@ -117,6 +121,8 @@ Meskipun garis tren (regresi linier) sedikit menanjak, persebaran data sangat te
 
 **6. Aplikasi dengan Rating Tertinggi per Kategori**
 
+<div align="center">
+  
 | No | Kategori          | Nama Aplikasi                              | Rating   | Jumlah Unduhan     |
 |----|-------------------|---------------------------------------------|----------|---------------------|
 | 1  | Action            | Endurance: dead space Premium               | 4.83     | 50,000              |
@@ -130,10 +136,14 @@ Meskipun garis tren (regresi linier) sedikit menanjak, persebaran data sangat te
 | 9  | Business          | Cvent Events                                | 4.87     | 500,000             |
 | 10 | Card              | Solitaire for Seniors Game                  | 4.89     | 1,000,000           |
 
+</div>
+
   Tabel ini menunjukkan aplikasi dengan rating tertinggi di berbagai kategori yang mencerminkan kepuasan pengguna yang sangat baik, mulai dari niche dengan unduhan lebih kecil seperti **Endurance: dead space Premium** (50 ribu unduhan, rating 4.83) hingga aplikasi populer seperti **Canva** dengan 500 juta unduhan dan rating 4.80. Beberapa aplikasi seperti **Vita Mahjong** dan **Solitaire for Seniors Game** tidak hanya mendapat rating tinggi di atas 4.8 tetapi juga berhasil mengumpulkan puluhan juta unduhan, menandakan kombinasi antara kualitas dan popularitas. Meski ada kategori dengan jumlah unduhan yang relatif rendah, semua aplikasi di tabel ini berhasil memberikan pengalaman pengguna yang memuaskan, menegaskan bahwa rating tinggi tidak selalu bergantung pada jumlah unduhan besar, tetapi pada kualitas dan relevansi aplikasi di kategorinya masing-masing.
 
 **7. Aplikasi dengan Download Tertinggi per Kategori**
 
+<div align="center">
+  
 | No | Kategori          | Nama Aplikasi                      | Jumlah Unduhan     | Rating  |
 |-----|-------------------|----------------------------------|--------------------|---------|
 | 1   | Action            | Free Fire                        | 1,000,000,000      | 4.22    |
@@ -146,6 +156,8 @@ Meskipun garis tren (regresi linier) sedikit menanjak, persebaran data sangat te
 | 8   | Books & Reference | Google Play Books & Audiobooks   | 1,000,000,000      | 4.68    |
 | 9   | Business          | Zoom Workplace                  | 1,000,000,000      | 4.15    |
 | 10  | Card              | UNO!™                          | 100,000,000        | 4.41    |
+
+</div>
 
   Tabel ini menampilkan aplikasi dengan jumlah unduhan tertinggi di berbagai kategori, menunjukkan popularitas besar sekaligus memberikan gambaran tentang pengalaman pengguna melalui rating mereka. Beberapa aplikasi seperti Free Fire, Roblox, Subway Surfers, dan Ludo King® berhasil mencapai 1 miliar unduhan, menandakan dominasi pasar yang signifikan di kategori masing-masing, meskipun ratingnya berkisar antara 4.15 hingga 4.56, yang masih cukup baik. Sementara itu, aplikasi seperti Canva dan Google Play Books & Audiobooks menunjukkan keseimbangan antara popularitas tinggi dan rating pengguna yang sangat baik (4.80 dan 4.68), mengindikasikan kualitas yang konsisten. Aplikasi dengan unduhan lebih rendah seperti Edmunds dan Ulta Beauty tetap mempertahankan rating yang bagus, menegaskan bahwa walaupun skalanya lebih kecil, kepuasan pengguna tetap terjaga. Secara keseluruhan, tabel ini menegaskan bahwa aplikasi dengan unduhan tertinggi tetap bisa menawarkan pengalaman pengguna yang memuaskan di berbagai kategori.
 
