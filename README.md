@@ -88,8 +88,8 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 
 <div align="center">
   
-  ![image](https://github.com/user-attachments/assets/06d18d94-79a8-4170-b403-16410a967b4e)
-  
+  ![image](https://github.com/user-attachments/assets/bd2e4116-6baf-4cf9-868e-4eb2125442c9)
+
 </div>
 
   Gambar tersebut merupakan diagram **scatter plot** yang menunjukkan hubungan antara **rata-rata jumlah download (dalam juta)** dengan **rata-rata rating** untuk setiap kategori aplikasi di Google Play Store. Setiap titik mewakili satu kategori. Terlihat bahwa kategori seperti **Communication** dan **Tools** memiliki jumlah download rata-rata yang sangat tinggi (mencapai lebih dari 1000 juta), namun ratingnya berada pada kisaran rata-rata (sekitar 4.0–4.2). Sebaliknya, beberapa kategori seperti **Casino**, **Medical**, dan **Arcade** memiliki rating tinggi mendekati 4.5 meskipun jumlah downloadnya relatif rendah. Kategori **Auto & Vehicles** tampak menyimpang dengan rating yang sangat rendah. Secara umum, grafik ini menunjukkan bahwa **tingginya jumlah download tidak selalu berkorelasi dengan rating tinggi**, yang bisa menjadi pertimbangan penting bagi pengembang dalam memilih kategori dan fokus pengembangan aplikasi.
@@ -98,8 +98,8 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 
 <div align="center">
   
-  ![image](https://github.com/user-attachments/assets/d17a3346-8e1f-4732-bb8d-5688604ed022)
-  
+  ![image](https://github.com/user-attachments/assets/27fb8529-0b46-44b6-9463-4b9e84f93728)
+
 </div>
 
   Gambar tersebut menunjukkan **diagram batang horizontal** yang mengilustrasikan **10 developer teratas berdasarkan total jumlah download aplikasi di Google Play Store**. Terlihat bahwa **Google LLC** mendominasi secara signifikan dengan total download mendekati **150.000 juta (150 miliar)**, jauh melampaui developer lain. Posisi berikutnya ditempati oleh **Meta Platforms, Inc.**, **WhatsApp LLC**, dan **Microsoft Corporation**, yang masing-masing juga mencatatkan angka download yang tinggi, namun masih sangat kecil dibandingkan Google. Developer lain seperti **Instagram**, **Samsung Electronics**, **Outfit7 Limited**, dan **Garena International** memiliki kontribusi download yang relatif lebih rendah. Visualisasi ini menegaskan bahwa beberapa perusahaan besar menguasai distribusi aplikasi dengan volume unduhan sangat tinggi, mencerminkan dominasi mereka dalam pasar aplikasi global.
