@@ -4,33 +4,11 @@
 
 Proyek ini bertujuan untuk mengumpulkan data aplikasi dari **Google Play Store** secara **otomatis dan sistematis**, berdasarkan kata kunci kategori aplikasi. Data yang diperoleh mencakup informasi penting seperti nama aplikasi, developer, kategori, rating, jumlah unduhan, harga, dan deskripsi.
 
-## 📂 Struktur Data yang Dikumpulkan
-
-<div align="center">
-  
-| Field                 | Tipe Data     | Deskripsi                                                                   |
-| --------------------- | ------------- | --------------------------------------------------------------------------- |
-| `_id`                 | `ObjectId`    | ID unik dokumen (otomatis oleh MongoDB)                                     |
-| `app_name`            | `string`      | Nama aplikasi                                                               |
-| `developer`           | `string`      | Nama pengembang aplikasi                                                    |
-| `category`            | `string`      | Kategori aplikasi                                                           |
-| `rating`              | `float`       | Nilai rating aplikasi (misalnya 3.77)                                       |
-| `number_of_reviews`   | `integer`     | Jumlah ulasan dari pengguna                                                 |
-| `number_of_downloads` | `string`      | Jumlah unduhan aplikasi (perlu parsing lebih lanjut bila ingin kuantitatif) |
-| `price`               | `float`       | Harga aplikasi (0 berarti gratis)                                           |
-| `size`                | `string/null` | Ukuran file aplikasi (jika tersedia, contoh: "25M")                         |
-| `description`         | `string`      | Deskripsi aplikasi (bisa mengandung HTML tag)                               |
-| `app_id`              | `string`      | ID unik aplikasi di Play Store (misalnya: "com.tinder")                     |
-| `source_keyword`      | `string`      | Kata kunci yang digunakan saat scraping aplikasi ini                        |
-
-</div>
-
 ## 🧰 Tools & Teknologi
 
 * **Python**: Scraping data
 * **R**: Integrasi & analisis data
 * **MongoDB**: Penyimpanan data
-
 
 ## 🗝️ Penentuan Kata Kunci
 
@@ -70,6 +48,34 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 3. **Pembersihan data** dari nilai kosong dan standarisasi format data.
 4. **Penyimpanan ke database MongoDB**.
 
+### Target Audiens
+
+* **Developer & Product Manager** yang ingin memahami posisi dan performa aplikasi mereka di pasar.
+* **Investor & Analis Pasar** yang mencari informasi tentang tren pasar aplikasi, pangsa pasar developer, dan potensi risiko aplikasi.
+* **Akademisi & Peneliti** yang tertarik pada studi kuantitatif tentang ekosistem aplikasi mobile dan faktor-faktor yang mempengaruhi kesuksesan aplikasi.
+* **Tim Pemasaran dan Strategi Bisnis** yang membutuhkan insight tentang kategori aplikasi populer dan perilaku pengguna.
+
+## 📂 Struktur Data yang Dikumpulkan
+
+<div align="center">
+  
+| Field                 | Tipe Data     | Deskripsi                                                                   |
+| --------------------- | ------------- | --------------------------------------------------------------------------- |
+| `_id`                 | `ObjectId`    | ID unik dokumen (otomatis oleh MongoDB)                                     |
+| `app_name`            | `string`      | Nama aplikasi                                                               |
+| `developer`           | `string`      | Nama pengembang aplikasi                                                    |
+| `category`            | `string`      | Kategori aplikasi                                                           |
+| `rating`              | `float`       | Nilai rating aplikasi (misalnya 3.77)                                       |
+| `number_of_reviews`   | `integer`     | Jumlah ulasan dari pengguna                                                 |
+| `number_of_downloads` | `string`      | Jumlah unduhan aplikasi (perlu parsing lebih lanjut bila ingin kuantitatif) |
+| `price`               | `float`       | Harga aplikasi (0 berarti gratis)                                           |
+| `size`                | `string/null` | Ukuran file aplikasi (jika tersedia, contoh: "25M")                         |
+| `description`         | `string`      | Deskripsi aplikasi (bisa mengandung HTML tag)                               |
+| `app_id`              | `string`      | ID unik aplikasi di Play Store (misalnya: "com.tinder")                     |
+| `source_keyword`      | `string`      | Kata kunci yang digunakan saat scraping aplikasi ini                        |
+
+</div>
+
 
 ## 📊 Agregasi
 
@@ -82,7 +88,7 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 </div>
 
 
-  Gambar tersebut menampilkan diagram batang horizontal yang menunjukkan **10 kategori aplikasi teratas di Google Play Store berdasarkan jumlah aplikasi yang berhasil dikumpulkan melalui proses scraping**. Kategori **"Sports"** mendominasi dengan jumlah aplikasi terbanyak, disusul oleh kategori **"Strategy"** dan **"Entertainment"**. Kategori lain yang juga menempati peringkat atas adalah **Shopping**, **Simulation**, **Finance**, hingga **Parenting**. Hal ini mengindikasikan bahwa kategori-kategori tersebut memiliki tingkat popularitas atau tingkat pengembangan aplikasi yang tinggi, dan bisa menjadi area fokus utama dalam analisis lebih lanjut atau pengembangan aplikasi baru.
+  Gambar tersebut menampilkan diagram batang horizontal yang menunjukkan **10 kategori aplikasi teratas di Google Play Store berdasarkan jumlah aplikasi yang berhasil dikumpulkan melalui proses scraping**. Kategori **"Sports"** mendominasi dengan jumlah aplikasi terbanyak, disusul oleh kategori **"Strategy"** dan **"Entertainment"**. Kategori lain yang juga menempati peringkat atas adalah **Shopping**, **Simulation**, **Finance**, hingga **Parenting**. Hal ini mengindikasikan bahwa kategori-kategori tersebut menunjukkan area persaingan pasar yang paling padat, memiliki tingkat popularitas atau tingkat pengembangan aplikasi yang tinggi, dan bisa menjadi area fokus utama dalam analisis lebih lanjut atau pengembangan aplikasi baru.
 
 **2. Rata-rata Download vs Rating per Kategori**
 
