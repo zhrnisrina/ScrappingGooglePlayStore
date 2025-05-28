@@ -6,6 +6,7 @@ Proyek ini bertujuan untuk mengumpulkan data aplikasi dari **Google Play Store**
 
 ## 📂 Struktur Data yang Dikumpulkan
 
+<div align="center">
 | Field                 | Tipe Data     | Deskripsi                                                                   |
 | --------------------- | ------------- | --------------------------------------------------------------------------- |
 | `_id`                 | `ObjectId`    | ID unik dokumen (otomatis oleh MongoDB)                                     |
@@ -20,7 +21,7 @@ Proyek ini bertujuan untuk mengumpulkan data aplikasi dari **Google Play Store**
 | `description`         | `string`      | Deskripsi aplikasi (bisa mengandung HTML tag)                               |
 | `app_id`              | `string`      | ID unik aplikasi di Play Store (misalnya: "com.tinder")                     |
 | `source_keyword`      | `string`      | Kata kunci yang digunakan saat scraping aplikasi ini                        |
-
+</div>
 ## 🧰 Tools & Teknologi
 
 * **Python**: Scraping data
