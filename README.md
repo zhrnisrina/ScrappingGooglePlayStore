@@ -4,11 +4,15 @@
 
 Proyek ini bertujuan untuk mengumpulkan data aplikasi dari **Google Play Store** secara **otomatis dan sistematis**, berdasarkan kata kunci kategori aplikasi. Data yang diperoleh mencakup informasi penting seperti nama aplikasi, developer, kategori, rating, jumlah unduhan, harga, dan deskripsi.
 
+---
+
 ## 🧰 Tools & Teknologi
 
 * **Python**: Scraping data
 * **R**: Integrasi & analisis data
 * **MongoDB**: Penyimpanan data
+
+---
 
 ## 🗝️ Penentuan Kata Kunci
 
@@ -24,6 +28,8 @@ Scraping dilakukan berdasarkan kata kunci kategori aplikasi yang mencerminkan be
 
 Pemilihan kata kunci ini bertujuan untuk memperoleh **data yang representatif dan komprehensif** dari berbagai kategori aplikasi.
 
+---
+
 ## 🎯 Tujuan Proyek
 
 Tujuan utama proyek ini adalah untuk mengumpulkan data aplikasi Google Play secara otomatis dan sistematis, termasuk informasi penting seperti nama aplikasi, developer, kategori, rating, jumlah unduhan, harga, dan deskripsi. Data ini nantinya digunakan untuk:
@@ -33,6 +39,8 @@ Tujuan utama proyek ini adalah untuk mengumpulkan data aplikasi Google Play seca
 * Mengidentifikasi potensi risiko melalui aplikasi populer yang memiliki rating rendah.
 * Memberikan insight bermanfaat bagi developer, analis pasar, investor, dan peneliti.
 
+---
+
 ## 🛠️ Metode Scraping
 
 Scraping dilakukan menggunakan kombinasi Python dan R:
@@ -41,6 +49,8 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 * **Integrasi**: Paket `reticulate` di R
 * **Database**: MongoDB (untuk penyimpanan dan pengolahan data)
 
+---
+
 ### Tahapan Scraping:
 
 1. **Pencarian aplikasi** berdasarkan kata kunci kategori, dengan batas maksimal **50 aplikasi per kategori** untuk menjaga efisiensi.
@@ -48,12 +58,16 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 3. **Pembersihan data** dari nilai kosong dan standarisasi format data.
 4. **Penyimpanan ke database MongoDB**.
 
+---
+
 ### Target Audiens
 
 * **Developer & Product Manager** yang ingin memahami posisi dan performa aplikasi mereka di pasar.
 * **Investor & Analis Pasar** yang mencari informasi tentang tren pasar aplikasi, pangsa pasar developer, dan potensi risiko aplikasi.
 * **Akademisi & Peneliti** yang tertarik pada studi kuantitatif tentang ekosistem aplikasi mobile dan faktor-faktor yang mempengaruhi kesuksesan aplikasi.
 * **Tim Pemasaran dan Strategi Bisnis** yang membutuhkan insight tentang kategori aplikasi populer dan perilaku pengguna.
+
+---
 
 ## 📂 Struktur Data yang Dikumpulkan
 
@@ -76,6 +90,10 @@ Scraping dilakukan menggunakan kombinasi Python dan R:
 
 </div>
 
+Penyimpanan pada MongoDB:
+![image](https://github.com/user-attachments/assets/2c7a1339-ce1c-4b03-bc65-792510de45ef)
+
+---
 
 ## 📊 Agregasi
 
