@@ -116,7 +116,8 @@ Penyimpanan pada MongoDB:
 
 <div align="center">
   
-  ![image](https://github.com/user-attachments/assets/bd2e4116-6baf-4cf9-868e-4eb2125442c9)
+![image](https://github.com/user-attachments/assets/18413c13-d5a7-4d79-bec5-db53c93a7958)
+
 
 </div>
 
