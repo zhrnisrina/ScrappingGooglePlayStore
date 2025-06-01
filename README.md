@@ -220,8 +220,9 @@ Meskipun garis tren (regresi linier) sedikit menanjak, persebaran data sangat te
 **9. Konsentrasi Developer Dominan per Kategori**
 
 <div align="center">
-  
-  ![image](https://github.com/user-attachments/assets/ce253d1c-5255-4083-bf75-f9bd324b01f9)
+
+![image](https://github.com/user-attachments/assets/b7763001-eb6b-4faf-9035-da4a7a8b37b5)
+
   
 </div>
 
@@ -240,10 +241,10 @@ Meskipun garis tren (regresi linier) sedikit menanjak, persebaran data sangat te
 **11. Aplikasi Rating Tinggi tapi Download Rendah (Hidden Gems)**
 
 <div align="center">
-  
-  ![image](https://github.com/user-attachments/assets/6f6d0732-29e7-49d0-85c7-c9dfb9118f35)
-  
+
+  ![image](https://github.com/user-attachments/assets/4c9939d4-e535-4cfd-af50-d98e89fd49e2)
+
 </div>
 
-Visualisasi ini menampilkan sepuluh aplikasi dengan rating tinggi (≥ 4.5) namun jumlah unduhan rendah (< 100.000), yang dikategorikan sebagai *"hidden gems"*. Aplikasi seperti *TC Connect*, *Bonelli Digital Classic*, dan *Good Inside: Parenting* menduduki peringkat teratas dengan rating mendekati sempurna, menunjukkan kualitas yang sangat baik dari perspektif pengguna. Namun, rendahnya angka unduhan mengindikasikan bahwa aplikasi-aplikasi ini kurang dikenal atau belum menjangkau audiens yang luas. Temuan ini menunjukkan adanya potensi besar untuk dikembangkan lebih lanjut melalui promosi atau strategi distribusi yang lebih baik.
+Visualisasi ini menampilkan sepuluh aplikasi dengan rating tinggi (≥ 4.5) namun jumlah unduhan rendah (< 100.000), yang dikategorikan sebagai *"hidden gems"*. Aplikasi seperti *Streets of Rage 4*, *ReadEra Premiun - ebook reader*, dan *Partiful: Fun Party Invites* menduduki peringkat teratas dengan rating mendekati sempurna, menunjukkan kualitas yang sangat baik dari perspektif pengguna. Namun, rendahnya angka unduhan mengindikasikan bahwa aplikasi-aplikasi ini kurang dikenal atau belum menjangkau audiens yang luas. Temuan ini menunjukkan adanya potensi besar untuk dikembangkan lebih lanjut melalui promosi atau strategi distribusi yang lebih baik.
 
