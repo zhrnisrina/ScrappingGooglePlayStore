@@ -6,11 +6,15 @@ Proyek ini bertujuan untuk mengumpulkan data aplikasi dari **Google Play Store**
 
 ---
 
+Berikut adalah versi README yang sudah disesuaikan dengan penjelasan bahwa proses scraping dilakukan di R dengan memanfaatkan modul Python:
+
+---
+
 ## 🧰 Tools & Teknologi
 
-* **Python**: Scraping data
-* **R**: Integrasi & analisis data
-* **MongoDB**: Penyimpanan data
+* **R**: Platform utama untuk integrasi, pengolahan, dan analisis data.
+* **Python (via Reticulate)**: Digunakan untuk scraping data Google Play Store dengan modul `google-play-scraper`. Modul Python ini dipanggil langsung dari R menggunakan package `reticulate`.
+* **MongoDB**: Digunakan sebagai penyimpanan data hasil scraping.
 
 ---
 
