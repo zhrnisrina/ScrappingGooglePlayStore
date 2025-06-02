@@ -1,0 +1,269 @@
+---
+title: "Scraping Data Apps play Store"
+output:
+  html_document: default
+  pdf_document: default
+date: "2025-05-31"
+---
+
+# Load Library
+
+```{r}
+library(reticulate)   # Integrasi R dan Python untuk memanggil modul Python
+library(dplyr)        # Untuk manipulasi data frame
+library(stringr)      # Untuk operasi string (misal hapus karakter)
+library(mongolite)    # Koneksi dan operasi MongoDB dari R
+```
+
+```{r}
+# Muat library reticulate
+library(reticulate)
+
+# Tentukan direktori virtual environment
+virtualenv_dir <- "C:/Users/Admin/Documents/.virtualenvs/r-reticulate"
+
+# Periksa apakah virtualenv sudah ada, jika belum, buat
+if (!virtualenv_exists(virtualenv_dir)) {
+   virtualenv_create(envname = virtualenv_dir)
+}
+
+# Instal package Python di virtualenv (gunakan ignore_installed=TRUE agar tidak error jika sudah ada)
+virtualenv_install(envname = virtualenv_dir, packages = "google-play-scraper", ignore_installed = TRUE)
+
+# Gunakan virtualenv tersebut
+use_virtualenv(virtualenv_dir, required = TRUE)
+
+# Ini adalah baris yang perlu Anda pastikan dieksekusi!
+gps <- import("google_play_scraper")
+
+# --- Verifikasi ---
+# Coba jalankan salah satu fungsi dari modul 'gps' untuk memastikan objeknya ada dan berfungsi.
+# Misalnya, panggil fungsi 'app' untuk mengambil detail WhatsApp.
+tryCatch({
+  whatsapp_info <- gps$app(app_id = "com.whatsapp", lang = "en", country = "us")
+  cat("Berhasil mengimpor 'google_play_scraper'. Judul aplikasi WhatsApp:", whatsapp_info$title, "\n")
+}, error = function(e) {
+  cat("Terjadi error saat mencoba menggunakan modul 'gps':", e$message, "\n")
+})
+```
+
+```{r}
+# Import Modul Python google_play_scraper
+gps <- import("google_play_scraper")  # Import modul google_play_scraper dari Python
+```
+
+# Daftar Keyword
+
+```{r}
+keywords <- c(
+  # Berbagai kategori dan jenis aplikasi yang ingin dicari
+  'TOP_FREE', 'TOP_PAID', 'TOP_GROSSING', 'TRENDING',
+  'NEW_FREE', 'NEW_PAID', 'NEW_FREE_GAMES', 'NEW_PAID_GAMES',
+  'TOP_FREE_GAMES', 'TOP_PAID_GAMES', 'TOP_GROSSING_GAMES',
+  'TOP_FREE_APPS', 'TOP_PAID_APPS', 'TOP_GROSSING_APPS',
+  'ART_AND_DESIGN', 'AUTO_AND_VEHICLES', 'BEAUTY', 'BOOKS_AND_REFERENCE',
+  'BUSINESS', 'COMICS', 'COMMUNICATION', 'DATING', 'EDUCATION',
+  'ENTERTAINMENT', 'EVENTS', 'FINANCE', 'FOOD_AND_DRINK',
+  'HEALTH_AND_FITNESS', 'HOUSE_AND_HOME', 'LIBRARIES_AND_DEMO',
+  'LIFESTYLE', 'MAPS_AND_NAVIGATION', 'MEDICAL', 'MUSIC_AND_AUDIO',
+  'NEWS_AND_MAGAZINES', 'PARENTING', 'PERSONALIZATION', 'PHOTOGRAPHY',
+  'PRODUCTIVITY', 'SHOPPING', 'SOCIAL', 'SPORTS', 'TOOLS',
+  'TRAVEL_AND_LOCAL', 'VIDEO_PLAYERS', 'WEATHER',
+  'GAME', 'FAMILY', 'GAME_ACTION', 'GAME_ADVENTURE', 'GAME_ARCADE',
+  'GAME_BOARD', 'GAME_CARD', 'GAME_CASINO', 'GAME_CASUAL',
+  'GAME_EDUCATIONAL', 'GAME_MUSIC', 'GAME_PUZZLE', 'GAME_RACING',
+  'GAME_ROLE_PLAYING', 'GAME_SIMULATION', 'GAME_SPORTS',
+  'GAME_STRATEGY', 'GAME_TRIVIA', 'GAME_WORD',
+  'FAMILY_ACTION', 'FAMILY_BRAINGAMES', 'FAMILY_CREATE'
+)
+```
+
+# Fungsi Helper
+```{r}
+# -----------------------------
+# Fungsi Helper: Cari Aplikasi Berdasarkan Keyword
+# -----------------------------
+search_apps <- function(keyword, n = 50) {
+  # Fungsi memanggil method search di modul python
+  gps$search(query = keyword, lang = "en", country = "us", n_hits = as.integer(n))
+}
+
+# -----------------------------
+# Fungsi Helper: Ambil Detail Aplikasi Berdasarkan appId
+# -----------------------------
+get_app_detail <- function(app_id) {
+  # Fungsi memanggil method app di modul python
+  gps$app(app_id, lang = "en", country = "us")
+}
+
+# -----------------------------
+# Fungsi Helper: Ganti Semua NULL dalam List Jadi NA (rekursif)
+# -----------------------------
+replace_null_with_na <- function(x) {
+  if (is.list(x)) {
+    # Jika list, rekursif panggil fungsi ini untuk tiap elemen list
+    lapply(x, replace_null_with_na)
+  } else {
+    # Jika NULL, ganti dengan NA, selain itu kembalikan nilai asli
+    if (is.null(x)) NA else x
+  }
+}
+
+# -----------------------------
+# Fungsi Helper: Parsing Ukuran Aplikasi
+# -----------------------------
+parse_size <- function(size_str) {
+  if (is.na(size_str)) return(NA_real_)  # Jika NA, kembalikan NA numeric
+  if (str_detect(size_str, "M")) {
+    # Jika ukuran dalam MB, hapus M dan kalikan 1 juta (bytes)
+    return(as.numeric(str_remove(size_str, "M")) * 1e6)
+  } else if (str_detect(size_str, "G")) {
+    # Jika GB, kalikan 1 milyar (bytes)
+    return(as.numeric(str_remove(size_str, "G")) * 1e9)
+  } else if (str_detect(size_str, "k")) {
+    # Jika KB, kalikan 1 ribu (bytes)
+    return(as.numeric(str_remove(size_str, "k")) * 1e3)
+  } else {
+    return(NA_real_)  # Jika format lain, kembalikan NA
+  }
+}
+```
+
+# Proses Scraping
+```{r}
+all_apps <- list()  # List kosong untuk menyimpan aplikasi unik
+
+for (keyword in keywords) {
+  cat("\nSearching category:", keyword, "\n")
+
+  # Cari aplikasi berdasarkan keyword dengan batas maksimal 50
+  apps <- tryCatch(
+    search_apps(keyword, 50),
+    error = function(e) {
+      cat("Error pada keyword:", keyword, " - ", e$message, "\n")
+      return(list())  # Jika error, kembalikan list kosong
+    }
+  )
+
+  cat("Jumlah aplikasi ditemukan:", length(apps), "\n")
+
+  # Loop tiap aplikasi yang ditemukan
+  for (app in apps) {
+    app_id <- app$appId
+
+    # Cek apakah app_id sudah pernah disimpan (hindari duplikat)
+    if (!app_id %in% names(all_apps)) {
+      detail <- tryCatch(
+        get_app_detail(app_id),  # Ambil detail aplikasi lengkap
+        error = function(e) {
+          cat("Gagal ambil detail aplikasi:", app_id, " - ", e$message, "\n")
+          return(NULL)  # Jika gagal, kembalikan NULL
+        }
+      )
+
+      if (!is.null(detail)) {
+        detail_clean <- replace_null_with_na(detail)  # Bersihkan NULL jadi NA
+
+        # --- MODIFIKASI DIMULAI DI SINI ---
+        # Konversi bidang-bidang yang berpotensi memiliki angka sangat besar
+        # (seperti 'installs' dan 'reviews') menjadi karakter.
+        # Ini harus dilakukan di sini untuk mencegah OverflowError saat reticulate
+        # mencoba mengonversi objek Python ke tipe R.
+        if (!is.null(detail_clean$installs) && !is.na(detail_clean$installs)) {
+          detail_clean$installs <- as.character(detail_clean$installs)
+        }
+        if (!is.null(detail_clean$reviews) && !is.na(detail_clean$reviews)) {
+          detail_clean$reviews <- as.character(detail_clean$reviews)
+        }
+        # --- MODIFIKASI BERAKHIR DI SINI ---
+
+        # Simpan detail aplikasi ke list all_apps dengan key app_id
+        all_apps[[app_id]] <- list(
+          app_name = detail_clean$title,
+          developer = detail_clean$developer,
+          category = detail_clean$genre,
+          rating = detail_clean$score,
+          number_of_reviews = detail_clean$reviews, # Sekarang akan menjadi karakter
+          number_of_downloads = detail_clean$installs, # Sekarang akan menjadi karakter
+          price = detail_clean$price,
+          size = detail_clean$size,
+          description = detail_clean$description,
+          app_id = app_id,
+          source_keyword = keyword
+        )
+
+        cat("  ✓ ", detail_clean$title, "\n")
+
+        Sys.sleep(0.3)  # Jeda 0.3 detik agar tidak kena rate limit
+      }
+    }
+  }
+}
+
+cat("\nTotal aplikasi unik hasil scraping:", length(all_apps), "\n")
+```
+
+# Filter Data dan Konversi ke Data Frame
+
+```{r}
+# Hilangkan entri kosong/null dari list aplikasi
+all_apps_filtered <- all_apps[!sapply(all_apps, function(x) is.null(x) || length(x) == 0)]
+
+# Bersihkan NULL lagi jika masih ada
+all_apps_filtered <- lapply(all_apps_filtered, replace_null_with_na)
+
+# Konversi list of list menjadi dataframe
+apps_df <- bind_rows(lapply(all_apps_filtered, as.data.frame))
+```
+
+# Data Cleaning dan Format Kolom
+```{r}
+clean_apps_data <- function(df) {
+  df %>%
+    mutate(
+      # Bersihkan kolom number_of_downloads dari karakter koma dan plus
+      number_of_downloads = str_remove_all(number_of_downloads, "[+,]"),
+      number_of_downloads = as.numeric(number_of_downloads),
+      
+      # Ubah price "Free" jadi 0, dan pastikan numeric
+      price = case_when(
+        is.na(price) ~ NA_real_,
+        price == "Free" ~ 0,
+        TRUE ~ as.numeric(price)
+      ),
+      
+      # Tambahkan kolom size_bytes hasil parsing size asli
+      size_bytes = sapply(size, parse_size),
+      
+      # Pastikan kolom size tetap sebagai karakter dengan NA jika kosong
+      size = ifelse(is.na(size), NA_character_, size),
+      
+      # Pastikan rating dan number_of_reviews numeric
+      rating = as.numeric(rating),
+      number_of_reviews = as.numeric(number_of_reviews)
+    )
+}
+
+# Terapkan pembersihan data
+apps_df_cleaned <- clean_apps_data(apps_df)
+
+# Cek data hasil cleaning (5-6 baris pertama)
+print(head(apps_df_cleaned))
+```
+
+# Simpan data ke MongoDB
+```{r}
+mongo_url <- "mongodb://localhost:27017"
+
+mongo_conn <- mongo(collection = "google_play_apps",
+                    db = "playstore_db",
+                    url = mongo_url)
+
+if (nrow(apps_df_cleaned) > 0) {
+  mongo_conn$drop()
+  mongo_conn$insert(apps_df_cleaned)
+  cat("Data berhasil disimpan ke MongoDB\n")
+} else {
+  cat("Data kosong, tidak disimpan\n")
+}
+```

@@ -1,0 +1,687 @@
+---
+title: "Agregasi Project Apps"
+output: html_document
+date: "2025-06-01"
+---
+
+### Setup Awal dan Koneksi MongoDB
+
+```{r}
+library(mongolite)
+library(jsonlite)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+mongo_conn <- mongo(
+  collection = "google_play_apps",
+  db = "playstore_db",
+  url = "mongodb://localhost:27017"
+)
+```
+
+### Agregasi dan Visualisasi
+
+#### 1. Top 10 Kategori Berdasarkan Jumlah Aplikasi
+
+```{r}
+# Pipeline agregasi: Top 10 kategori berdasarkan jumlah aplikasi
+top_kategori_pipeline <- '[
+  {
+    "$group": {
+      "_id": "$category",
+      "jumlah_aplikasi": { "$sum": 1 }
+    }
+  },
+  {
+    "$sort": { "jumlah_aplikasi": -1 }
+  },
+  {
+    "$limit": 10
+  }
+]'
+
+# Eksekusi pipeline dan ubah nama kolom
+top_kategori <- mongo_conn$aggregate(top_kategori_pipeline) %>%
+  rename(category = `_id`)
+
+# Visualisasi dengan ggplot2
+ggplot(top_kategori, aes(x = reorder(category, jumlah_aplikasi), y = jumlah_aplikasi)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Top 10 Kategori Berdasarkan Jumlah Aplikasi",
+    x = "Kategori",
+    y = "Jumlah Aplikasi"
+  ) +
+  theme_minimal()
+```
+
+#### 2. Rata-rata Download vs Rating per Kategori
+
+```{r}
+pipeline_avg_download_rating <- '[
+  {
+    "$addFields": {
+      "downloads_numeric": {
+        "$toDouble": {
+          "$replaceAll": {
+            "input": {
+              "$replaceAll": {
+                "input": { "$toString": "$number_of_downloads" },
+                "find": ",",
+                "replacement": ""
+              }
+            },
+            "find": "+",
+            "replacement": ""
+          }
+        }
+      },
+      "rating_numeric": { "$toDouble": "$rating" }
+    }
+  },
+  {
+    "$group": {
+      "_id": "$category",
+      "avg_downloads": { "$avg": "$downloads_numeric" },
+      "avg_rating": { "$avg": "$rating_numeric" }
+    }
+  },
+  {
+    "$sort": { "avg_downloads": -1 }
+  }
+]'
+
+# Eksekusi pipeline dan ubah nama kolom
+avg_download_rating <- mongo_conn$aggregate(pipeline_avg_download_rating) %>%
+  rename(category = `_id`)
+
+# Visualisasi
+ggplot(avg_download_rating, aes(x = avg_rating, y = avg_downloads, label = category)) +
+  geom_point(color = "darkgreen", size = 3, alpha = 0.7) +
+  geom_text(size = 3, hjust = 0, vjust = -0.5) +
+  scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
+  labs(
+    title = "Rata-rata Download vs Rating per Kategori",
+    x = "Rata-rata Rating",
+    y = "Rata-rata Jumlah Download"
+  ) +
+  theme_minimal()
+```
+
+#### 3. Developer dengan Total Download Terbesar (Top 10)
+
+```{r}
+# Pipeline untuk menghitung total download per developer (Top 10)
+pipeline_top_dev_download <- '[
+  {
+    "$addFields": {
+      "downloads_numeric": {
+        "$toDouble": {
+          "$replaceAll": {
+            "input": {
+              "$replaceAll": {
+                "input": { "$toString": "$number_of_downloads" },
+                "find": ",",
+                "replacement": ""
+              }
+            },
+            "find": "+",
+            "replacement": ""
+          }
+        }
+      }
+    }
+  },
+  {
+    "$group": {
+      "_id": "$developer",
+      "total_downloads": { "$sum": "$downloads_numeric" }
+    }
+  },
+  {
+    "$sort": { "total_downloads": -1 }
+  },
+  {
+    "$limit": 10
+  }
+]'
+
+# Eksekusi pipeline dan ubah nama kolom
+top_dev_download <- mongo_conn$aggregate(pipeline_top_dev_download) %>%
+  rename(developer = `_id`)
+
+# Visualisasi bar chart horizontal
+ggplot(top_dev_download, aes(x = reorder(developer, total_downloads), y = total_downloads)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
+  labs(
+    title = "Top 10 Developer dengan Total Download Terbesar",
+    x = "Developer",
+    y = "Total Download"
+  ) +
+  theme_minimal()
+```
+
+#### 4. Aplikasi dengan Download Tinggi tapi Rating Rendah (Risiko UX)
+
+```{r}
+# Pipeline untuk menemukan aplikasi populer tapi rating rendah
+pipeline_risk_ux <- '[
+  {
+    "$addFields": {
+      "downloads_numeric": {
+        "$toDouble": {
+          "$replaceAll": {
+            "input": {
+              "$replaceAll": {
+                "input": { "$toString": "$number_of_downloads" },
+                "find": ",",
+                "replacement": ""
+              }
+            },
+            "find": "+",
+            "replacement": ""
+          }
+        }
+      },
+      "rating_numeric": { "$toDouble": "$rating" }
+    }
+  },
+  {
+    "$match": {
+      "downloads_numeric": { "$gte": 10000000 },
+      "rating_numeric": { "$lte": 3.5 }
+    }
+  },
+  {
+    "$project": {
+      "app_name": 1,
+      "developer": 1,
+      "category": 1,
+      "downloads_numeric": 1,
+      "rating_numeric": 1
+    }
+  },
+  {
+    "$sort": { "downloads_numeric": -1 }
+  },
+  {
+    "$limit": 10
+  }
+]'
+
+# Eksekusi pipeline
+apps_risk_ux <- mongo_conn$aggregate(pipeline_risk_ux)
+
+# Tampilkan tabel hasil
+print(apps_risk_ux)
+
+# Visualisasi (opsional)
+ggplot(apps_risk_ux, aes(x = reorder(app_name, downloads_numeric), y = downloads_numeric, fill = rating_numeric)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_gradient(low = "red", high = "orange") +
+  scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
+  labs(
+    title = "Top 10 Aplikasi Populer dengan Rating Rendah (Risiko UX)",
+    x = "Aplikasi",
+    y = "Jumlah Download",
+    fill = "Rating"
+  ) +
+  theme_minimal()
+```
+
+#### 5. Korelasi Rating dan Download
+
+```{r}
+# Pipeline untuk konversi numerik rating dan download
+pipeline_rating_download <- '[
+  {
+    "$addFields": {
+      "downloads_numeric": {
+        "$toDouble": {
+          "$replaceAll": {
+            "input": {
+              "$replaceAll": {
+                "input": { "$toString": "$number_of_downloads" },
+                "find": ",",
+                "replacement": ""
+              }
+            },
+            "find": "+",
+            "replacement": ""
+          }
+        }
+      },
+      "rating_numeric": { "$toDouble": "$rating" }
+    }
+  },
+  {
+    "$match": {
+      "downloads_numeric": { "$ne": null },
+      "rating_numeric": { "$ne": null }
+    }
+  },
+  {
+    "$project": {
+      "app_name": 1,
+      "downloads_numeric": 1,
+      "rating_numeric": 1
+    }
+  }
+]'
+
+# Eksekusi pipeline
+rating_download_data <- mongo_conn$aggregate(pipeline_rating_download)
+
+# Hitung korelasi Pearson
+correlation <- cor(rating_download_data$rating_numeric, rating_download_data$downloads_numeric, method = "pearson", use = "complete.obs")
+cat("Korelasi Pearson antara Rating dan Jumlah Download:", correlation, "\n")
+
+# Visualisasi scatter plot
+ggplot(rating_download_data, aes(x = rating_numeric, y = downloads_numeric)) +
+  geom_point(alpha = 0.4, color = "steelblue") +
+  geom_smooth(method = "lm", color = "darkred", se = FALSE) +
+  scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
+  labs(
+    title = paste0("Korelasi Rating dan Jumlah Download (r = ", round(correlation, 3), ")"),
+    x = "Rating",
+    y = "Jumlah Download"
+  ) +
+  theme_minimal()
+```
+
+#### 6. Aplikasi dengan Rating Tertinggi per Kategori
+
+```{r}
+# Pipeline: Ambil aplikasi dengan rating tertinggi per kategori
+pipeline_top_rating_per_category <- '[
+  {
+    "$addFields": {
+      "rating_numeric": { "$toDouble": "$rating" }
+    }
+  },
+  {
+    "$match": {
+      "rating_numeric": { "$ne": null }
+    }
+  },
+  {
+    "$sort": {
+      "category": 1,
+      "rating_numeric": -1,
+      "number_of_reviews": -1
+    }
+  },
+  {
+    "$group": {
+      "_id": "$category",
+      "top_app": { "$first": "$app_name" },
+      "top_rating": { "$first": "$rating_numeric" },
+      "developer": { "$first": "$developer" }
+    }
+  },
+  {
+    "$sort": { "top_rating": -1 }
+  }
+]'
+
+# Eksekusi pipeline
+top_apps_per_category <- mongo_conn$aggregate(pipeline_top_rating_per_category) %>%
+  rename(
+    category = `_id`,
+    app_name = top_app,
+    rating = top_rating
+  )
+
+# Tampilkan tabel
+print(top_apps_per_category)
+
+# (Opsional) Visualisasi
+ggplot(top_apps_per_category, aes(x = reorder(category, rating), y = rating, fill = category)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(
+    title = "Aplikasi dengan Rating Tertinggi per Kategori",
+    x = "Kategori",
+    y = "Rating Tertinggi"
+  ) +
+  theme_minimal()
+```
+
+#### 7. Aplikasi dengan Download Tertinggi per Kategori
+
+```{r}
+# Pipeline untuk menemukan aplikasi dengan download tertinggi per kategori
+pipeline_top_download_per_category <- '[
+  {
+    "$addFields": {
+      "downloads_numeric": {
+        "$toDouble": {
+          "$replaceAll": {
+            "input": {
+              "$replaceAll": {
+                "input": { "$toString": "$number_of_downloads" },
+                "find": ",",
+                "replacement": ""
+              }
+            },
+            "find": "+",
+            "replacement": ""
+          }
+        }
+      }
+    }
+  },
+  {
+    "$match": {
+      "downloads_numeric": { "$ne": null }
+    }
+  },
+  {
+    "$sort": {
+      "category": 1,
+      "downloads_numeric": -1
+    }
+  },
+  {
+    "$group": {
+      "_id": "$category",
+      "top_app": { "$first": "$app_name" },
+      "top_download": { "$first": "$downloads_numeric" },
+      "developer": { "$first": "$developer" }
+    }
+  },
+  {
+    "$sort": { "top_download": -1 }
+  }
+]'
+
+# Eksekusi pipeline
+top_download_apps <- mongo_conn$aggregate(pipeline_top_download_per_category) %>%
+  rename(
+    category = `_id`,
+    app_name = top_app,
+    downloads = top_download
+  )
+
+# Tampilkan tabel hasil
+print(top_download_apps)
+
+# (Opsional) Visualisasi
+ggplot(top_download_apps, aes(x = reorder(category, downloads), y = downloads, fill = category)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(
+    title = "Aplikasi dengan Jumlah Download Tertinggi per Kategori",
+    x = "Kategori",
+    y = "Jumlah Download"
+  ) +
+  theme_minimal()
+
+```
+
+#### 8. Volatilitas Rating Antar Aplikasi dalam Satu Kategori
+
+```{r}
+# Pipeline: Hitung standar deviasi rating per kategori
+pipeline_rating_volatility <- '[
+  {
+    "$addFields": {
+      "rating_numeric": { "$toDouble": "$rating" }
+    }
+  },
+  {
+    "$match": {
+      "rating_numeric": { "$ne": null }
+    }
+  },
+  {
+    "$group": {
+      "_id": "$category",
+      "avg_rating": { "$avg": "$rating_numeric" },
+      "sd_rating": { "$stdDevPop": "$rating_numeric" },
+      "min_rating": { "$min": "$rating_numeric" },
+      "max_rating": { "$max": "$rating_numeric" },
+      "count": { "$sum": 1 }
+    }
+  },
+  {
+    "$match": {
+      "count": { "$gte": 10 }
+    }
+  },
+  {
+    "$sort": { "sd_rating": -1 }
+  }
+]'
+
+# Eksekusi pipeline dan ubah nama kolom
+rating_volatility <- mongo_conn$aggregate(pipeline_rating_volatility) %>%
+  rename(
+    category = `_id`
+  )
+
+# Tampilkan hasil
+print(rating_volatility)
+
+# Visualisasi: Volatilitas Rating (Standar Deviasi)
+ggplot(rating_volatility, aes(x = reorder(category, sd_rating), y = sd_rating)) +
+  geom_col(fill = "tomato") +
+  coord_flip() +
+  labs(
+    title = "Volatilitas Rating Antar Aplikasi dalam Satu Kategori",
+    x = "Kategori",
+    y = "Standar Deviasi Rating"
+  ) +
+  theme_minimal()
+```
+
+#### 9. Konsentrasi Developer Dominan per Kategori
+
+```{r}
+# Pipeline: Hitung jumlah aplikasi per developer per kategori
+pipeline_dev_concentration <- '[
+  {
+    "$match": {
+      "category": { "$ne": null },
+      "developer": { "$ne": null }
+    }
+  },
+  {
+    "$group": {
+      "_id": { "category": "$category", "developer": "$developer" },
+      "app_count": { "$sum": 1 }
+    }
+  },
+  {
+    "$group": {
+      "_id": "$_id.category",
+      "total_apps": { "$sum": "$app_count" },
+      "top_dev": { "$max": "$app_count" }
+    }
+  },
+  {
+    "$project": {
+      "category": "$_id",
+      "total_apps": 1,
+      "top_dev_apps": "$top_dev",
+      "dominance_ratio": { "$divide": ["$top_dev", "$total_apps"] }
+    }
+  },
+  {
+    "$sort": { "dominance_ratio": -1 }
+  }
+]'
+
+# Eksekusi pipeline dan ubah nama kolom
+dev_concentration <- mongo_conn$aggregate(pipeline_dev_concentration) %>%
+  rename(
+    category = category,
+    total_apps = total_apps,
+    top_dev_apps = top_dev_apps,
+    dominance_ratio = dominance_ratio
+  )
+
+# Tampilkan tabel
+print(dev_concentration)
+
+# Visualisasi konsentrasi
+ggplot(dev_concentration, aes(x = reorder(category, dominance_ratio), y = dominance_ratio)) +
+  geom_col(fill = "darkblue") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Konsentrasi Developer Dominan per Kategori",
+    x = "Kategori",
+    y = "Proporsi Aplikasi oleh Developer Terbesar"
+  ) +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+#### 10. Rasio Aplikasi Berbayar per Kategori
+
+```{r}
+# Pipeline: Hitung jumlah aplikasi berbayar dan total aplikasi per kategori
+pipeline_paid_ratio <- '[
+  {
+    "$addFields": {
+      "is_paid": {
+        "$cond": {
+          "if": { "$eq": ["$price", "Free"] },
+          "then": 0,
+          "else": 1
+        }
+      }
+    }
+  },
+  {
+    "$match": {
+      "category": { "$ne": null }
+    }
+  },
+  {
+    "$group": {
+      "_id": "$category",
+      "total_apps": { "$sum": 1 },
+      "paid_apps": { "$sum": "$is_paid" }
+    }
+  },
+  {
+    "$project": {
+      "category": "$_id",
+      "total_apps": 1,
+      "paid_apps": 1,
+      "paid_ratio": { "$divide": ["$paid_apps", "$total_apps"] }
+    }
+  },
+  {
+    "$sort": { "paid_ratio": -1 }
+  }
+]'
+
+# Eksekusi pipeline
+paid_ratio <- mongo_conn$aggregate(pipeline_paid_ratio) %>%
+  rename(
+    category = category,
+    total_apps = total_apps,
+    paid_apps = paid_apps,
+    paid_ratio = paid_ratio
+  )
+
+# Tampilkan tabel hasil
+print(paid_ratio)
+
+# Visualisasi bar chart
+ggplot(paid_ratio, aes(x = reorder(category, paid_ratio), y = paid_ratio)) +
+  geom_col(fill = "darkorange") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Rasio Aplikasi Berbayar per Kategori",
+    x = "Kategori",
+    y = "Proporsi Aplikasi Berbayar"
+  ) +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+#### 11. Aplikasi Rating Tinggi tapi Download Rendah (Hidden Gems)
+
+```{r}
+# Pipeline: Ambil aplikasi dengan rating tinggi & download rendah
+pipeline_hidden_gems <- '[
+  {
+    "$addFields": {
+      "downloads_numeric": {
+        "$toDouble": {
+          "$replaceAll": {
+            "input": {
+              "$replaceAll": {
+                "input": { "$toString": "$number_of_downloads" },
+                "find": ",",
+                "replacement": ""
+              }
+            },
+            "find": "+",
+            "replacement": ""
+          }
+        }
+      },
+      "rating_numeric": { "$toDouble": "$rating" },
+      "reviews_numeric": { "$toDouble": "$number_of_reviews" }
+    }
+  },
+  {
+    "$match": {
+      "rating_numeric": { "$gte": 4.5 },
+      "downloads_numeric": { "$lte": 100000 },
+      "reviews_numeric": { "$gte": 50 }
+    }
+  },
+  {
+    "$project": {
+      "app_name": 1,
+      "category": 1,
+      "developer": 1,
+      "rating_numeric": 1,
+      "downloads_numeric": 1,
+      "reviews_numeric": 1
+    }
+  },
+  {
+    "$sort": { "rating_numeric": -1, "downloads_numeric": 1 }
+  },
+  {
+    "$limit": 10
+  }
+]'
+
+# Eksekusi pipeline
+hidden_gems <- mongo_conn$aggregate(pipeline_hidden_gems)
+
+# Tampilkan tabel hasil
+print(hidden_gems)
+
+# Visualisasi (opsional)
+ggplot(hidden_gems, aes(x = reorder(app_name, downloads_numeric), y = downloads_numeric, fill = rating_numeric)) +
+  geom_col() +
+  coord_flip() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  scale_fill_gradient(low = "lightblue", high = "darkgreen") +
+  labs(
+    title = "Top 10 Hidden Gems: Rating Tinggi, Download Rendah",
+    x = "Aplikasi",
+    y = "Jumlah Download",
+    fill = "Rating"
+  ) +
+  theme_minimal()
+```
